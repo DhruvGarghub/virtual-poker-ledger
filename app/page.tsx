@@ -4,7 +4,16 @@ import { useState } from "react";
 
 export default function Home() {
   const [sessionName, setSessionName] = useState("");
+  const [message, setMessage] = useState("");
 
+  function handleCreateSession() {
+    if (!sessionName.trim()) {
+      setMessage("Please enter a session name.");
+      return;
+    }
+
+    setMessage(`Session "${sessionName.trim()}" is ready for setup.`);
+  }
   return (
     <main className="min-h-screen bg-[#151916] text-[#F4F5F0] flex items-center justify-center px-6">
       <div className="w-full max-w-lg text-center">
@@ -42,9 +51,15 @@ export default function Home() {
           <button
             type="button"
             className="mt-5 w-full rounded-lg bg-[#80A88B] px-4 py-3 font-semibold text-[#151916] transition hover:brightness-110"
+            onClick={handleCreateSession} 
           >
             Create New Session
           </button>
+          {message && (
+            <p className="mt-3 text-sm text-[#80A88B]">
+              {message}
+            </p>
+          )}
         </div>
 
         <p className="mt-6 text-sm text-[#8d958e]">
