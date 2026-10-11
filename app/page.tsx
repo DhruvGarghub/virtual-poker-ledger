@@ -5,6 +5,7 @@ import { useState } from "react";
 export default function Home() {
   const [sessionName, setSessionName] = useState("");
   const [message, setMessage] = useState("");
+  const [screen,setScreen] = useState("home");
 
   function handleCreateSession() {
     if (!sessionName.trim()) {
@@ -12,8 +13,47 @@ export default function Home() {
       return;
     }
 
-    setMessage(`Session "${sessionName.trim()}" is ready for setup.`);
+    setScreen("setup");
   }
+
+  if (screen === "setup") {
+  return (
+    <main className="min-h-screen bg-[#151916] text-[#F4F5F0] p-6">
+      <div className="mx-auto max-w-lg">
+        <p className="text-sm text-[#80A88B]">NEW SESSION</p>
+
+        <h1 className="mt-3 text-3xl font-bold">
+          {sessionName.trim()}
+        </h1>
+
+        <div className="mt-6 rounded-2xl bg-[#222923] p-6">
+          <label className="block text-sm">
+            Token value (₹ per token)
+          </label>
+
+          <input
+            type="number"
+            min="0.01"
+            step="any"
+            defaultValue="10"
+            className="mt-2 w-full rounded-lg bg-[#151916] p-3 text-[#F4F5F0]"
+          />
+
+          <p className="mt-3 text-sm text-gray-400">
+            Next, we'll add players and their starting buy-ins.
+          </p>
+
+          <button
+            onClick={() => setScreen("home")}
+            className="mt-5 rounded-lg border border-[#80A88B] px-4 py-2"
+          >
+            Back
+          </button>
+        </div>
+      </div>
+    </main>
+  );
+}
   return (
     <main className="min-h-screen bg-[#151916] text-[#F4F5F0] flex items-center justify-center px-6">
       <div className="w-full max-w-lg text-center">
