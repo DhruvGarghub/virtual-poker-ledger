@@ -7,6 +7,12 @@ export default function Home() {
   const [message, setMessage] = useState("");
   const [screen,setScreen] = useState("home");
   const [tokenValue,setTokenValue] = useState("10");
+  const [players, setPlayers] = useState<
+  { id: number; name: string; buyIn: string }[]
+  >([]);
+
+  const [playerName, setPlayerName] = useState("");
+  const [buyInAmount, setBuyInAmount] = useState("");
 
   function handleCreateSession() {
     if (!sessionName.trim()) {
@@ -15,6 +21,23 @@ export default function Home() {
     }
 
     setScreen("setup");
+  }
+
+  function handleAddPlayer() {
+    if (!playerName.trim() || !buyInAmount.trim()) {
+      return;
+    }
+
+    const newPlayer = {
+      id: Date.now(),
+      name: playerName.trim(),
+      buyIn: buyInAmount,
+    };
+
+    setPlayers([...players, newPlayer]);
+
+    setPlayerName("");
+    setBuyInAmount("");
   }
 
   if (screen === "setup") {
@@ -40,10 +63,63 @@ export default function Home() {
             onChange={(event) => setTokenValue(event.target.value)}
             className="mt-2 w-full rounded-lg bg-[#151916] p-3 text-[#F4F5F0]"
           />
+        
+          
+        <div className="mt-5">
+          <label className="block text-sm font-medium">
+            Player name
+          </label>
+          <input
+            type="text"
+            placeholder="e.g. Rahul"
+            value={playerName}
+            onChange={(event) => setPlayerName(event.target.value)}
+            className="mt-2 w-full rounded-lg bg-[#151916] p-3 text-[#F4F5F0]"
+          />
+        </div>
 
-          <p className="mt-3 text-sm text-gray-400">
-            Next, we'll add players and their starting buy-ins.
-          </p>
+
+
+        <div className="mt-5">
+          <label className="block text-sm font-medium">
+            Starting buy-in (₹)
+          </label>
+          <input
+            type="number"
+            min="0"
+            placeholder="e.g. 500"
+            value={buyInAmount}
+            onChange={(event) => setBuyInAmount(event.target.value)}
+            className="mt-2 w-full rounded-lg bg-[#151916] p-3 text-[#F4F5F0]"
+          />
+        </div>
+
+
+
+        <button
+          type="button"
+          onClick={handleAddPlayer}
+          className="mt-5 w-full rounded-lg bg-[#80A88B] px-4 py-3 font-semibold text-[#151916] transition hover:brightness-110"
+        >
+          Add Player
+        </button>
+
+        {players.length > 0 && (
+          <div className="mt-4 space-y-2">
+            {players.map((player) => (
+            <div
+              key={player.id}
+              className="flex items-center justify-between rounded-lg bg-[#151916] p-3"
+            >
+              <span>{player.name}</span>
+              <span className="text-[#80A88B]">
+                ₹{player.buyIn}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+
 
           <button
             onClick={() => setScreen("home")}
