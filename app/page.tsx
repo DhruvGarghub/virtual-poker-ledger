@@ -6,6 +6,7 @@ export default function Home() {
   const [sessionName, setSessionName] = useState("");
   const [message, setMessage] = useState("");
   const [screen,setScreen] = useState("home");
+  const [tokenValue,setTokenValue] = useState("10");
 
   function handleCreateSession() {
     if (!sessionName.trim()) {
@@ -35,7 +36,8 @@ export default function Home() {
             type="number"
             min="0.01"
             step="any"
-            defaultValue="10"
+            value = {tokenValue}
+            onChange={(event) => setTokenValue(event.target.value)}
             className="mt-2 w-full rounded-lg bg-[#151916] p-3 text-[#F4F5F0]"
           />
 
