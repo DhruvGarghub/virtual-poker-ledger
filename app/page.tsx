@@ -7,9 +7,11 @@ export default function Home() {
   const [message, setMessage] = useState("");
   const [screen,setScreen] = useState("home");
   const [tokenValue,setTokenValue] = useState("10");
+  
   const [players, setPlayers] = useState<
-  { id: number; name: string; buyIn: string }[]
+    { id: number; name: string; buyIn: number }[]
   >([]);
+
 
   const [playerName, setPlayerName] = useState("");
   const [buyInAmount, setBuyInAmount] = useState("");
@@ -23,22 +25,46 @@ export default function Home() {
     setScreen("setup");
   }
 
+  
   function handleAddPlayer() {
-    if (!playerName.trim() || !buyInAmount.trim()) {
+    const buyIn = Number(buyInAmount);
+    const valuePerToken = Number(tokenValue);
+
+    if (!playerName.trim()) {
+      setMessage("Please enter a player name.");
+      return;
+    }
+
+    if (!buyInAmount.trim() || !Number.isFinite(buyIn) || buyIn <= 0) {
+      setMessage("Buy-in must be greater than ₹0.");
+      return;
+    }
+
+    if (!Number.isFinite(valuePerToken) || valuePerToken <= 0) {
+      setMessage("Token value must be greater than ₹0.");
+      return;
+    }
+
+    const tokenCount = buyIn / valuePerToken;
+    const roundedTokenCount = Math.round(tokenCount);
+
+    if (Math.abs(tokenCount - roundedTokenCount) > 1e-9) {
+      setMessage("Buy-in must result in a whole number of tokens.");
       return;
     }
 
     const newPlayer = {
       id: Date.now(),
       name: playerName.trim(),
-      buyIn: buyInAmount,
+      buyIn: buyIn,
     };
 
     setPlayers([...players, newPlayer]);
-
     setPlayerName("");
     setBuyInAmount("");
+    setMessage("");
   }
+
 
   if (screen === "setup") {
   return (
@@ -103,6 +129,11 @@ export default function Home() {
         >
           Add Player
         </button>
+        {message && (
+          <p className="mt-3 text-sm text-red-400">
+            {message}
+          </p>
+        )}
 
         {players.length > 0 && (
           <div className="mt-4 space-y-2">
