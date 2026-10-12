@@ -113,7 +113,8 @@ export default function Home() {
             >
               <span>{player.name}</span>
               <span className="text-[#80A88B]">
-                ₹{player.buyIn}
+                ₹{player.buyIn} .{" "}
+                {Number(player.buyIn) / Number(tokenValue)} tokens
               </span>
             </div>
           ))}
