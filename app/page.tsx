@@ -16,14 +16,44 @@ export default function Home() {
   const [playerName, setPlayerName] = useState("");
   const [buyInAmount, setBuyInAmount] = useState("");
 
-  function handleCreateSession() {
-    if (!sessionName.trim()) {
-      setMessage("Please enter a session name.");
+  
+async function handleCreateSession() {
+  if (!sessionName.trim()) {
+    setMessage("Please enter a session name.");
+    return;
+  }
+
+  setMessage("Creating session...");
+
+  try {
+    const response = await fetch("/api/sessions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: sessionName.trim(),
+        tokenValue: tokenValue,
+      }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      setMessage(result.error || "Could not create session.");
       return;
     }
 
+    // Save the new session ID for later use.
+    sessionStorage.setItem("pokerSessionId", result.sessionId);
+
+    setMessage("");
     setScreen("setup");
+  } catch {
+    setMessage("Unable to connect to the server. Please try again.");
   }
+}
+
 
   
   function handleAddPlayer() {
